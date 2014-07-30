@@ -40,9 +40,14 @@ package :nmap do
   end
 end
 
+package :general_dependencies do
+  description 'useful packages for general use and installation'
+  apt %w(git-core subversion vim), :sudo => true
+end
+
 package :metasploit_dependencies do
   description 'Metasploit Dependencies'
-  apt %w(libreadline-dev libssl-dev libpq5 libpq-dev libreadline5 libsqlite3-dev libpcap-dev subversion git-core autoconf postgresql pgadmin3 curl zlib1g-dev libxml2-dev libxslt1-dev vncviewer libyaml-dev), :sudo => true
+  apt %w(libreadline-dev libpq5 libpq-dev libreadline5 libsqlite3-dev libpcap-dev autoconf postgresql pgadmin3 curl zlib1g-dev libxml2-dev libxslt1-dev vncviewer libyaml-dev), :sudo => true
 end
 
 package :rubygem_dependencies do
@@ -53,7 +58,7 @@ end
 package :ruby_gems do
   description 'common gems'
   #unlike apt which passes an array this should be a string
-  gem 'brakeman rails builder mechanize httparty nmap-parser rtf rubyXL wirble'
+  gem 'bundler brakeman rails builder mechanize httparty nmap-parser rtf rubyXL wirble'
   requires :ruby
 end
 
@@ -62,7 +67,27 @@ package :metasploit do
   runner ['git clone https://github.com/rapid7/metasploit-framework.git', 'mv metasploit-framework/ /opt/'] do
     post :install, 'BUNDLE_GEMFILE=/opt/metasploit-framework/Gemfile bundle install'
   end
+  requires :ruby
+  requires :ruby_gems
+  requires :general_dependencies
   requires :metasploit_dependencies
+  requires :java
+  verify do 
+    has_file '/opt/metasploit-framework/msfconsole'
+  end
+end
+
+package :testing_scripts do
+  description 'Rorys testing scripts repo'
+  runner ['git clone https://github.com/raesene/TestingScripts.git', 'mv TestingScripts/ /opt/'] do
+    post :install, 'BUNDLE_GEMFILE=/opt/TestingScripts/Gemfile bundle install'
+  end
+  requires :ruby
+  requires :ruby_gems
+  requires :general_dependencies
+  verify do
+    has_file '/opt/TestingScripts/nmapautoanalyzer.rb'
+  end
 end
 
 #per http://developer.android.com/sdk/installing/index.html?pkg=tools
@@ -88,10 +113,14 @@ package :java do
   end
 end
 
-#package :android_sdk do
-#  description 'Android SDK'
-#  runner ['']
-#end
+#Kind of useless for now as you'll still need to get the platforms
+#tricky to automate due to dumb license accepting screens
+package :android_sdk do
+  description 'Android SDK'
+  version = '23.0.2'
+  runner ["wget http://dl.google.com/android/android-sdk_r#{version}-linux.tgz", "tar -xzf android-sdk_r#{version}-linux.tgz", "mv android-sdk-line /opt/"]
+  requires :android_sdk_prereqs
+end
 
 policy :ruby, :roles => :test do
   requires :build_essentials
@@ -104,6 +133,7 @@ policy :ruby, :roles => :test do
   #requires :ruby_gems
   #requires :metasploit
   requires :java
+  requires :testing_scripts
 end
 
 #This is where you specify the machine to deploy to
