@@ -1,13 +1,23 @@
+#This is a Sprinkle(https://github.com/sprinkle-tool/sprinkle) script for automating
+#build of a security testing linux build (based on Ubuntu)
+#Sources used 
+#https://github.com/madmantm/ubuntu-pentest-tools/blob/master/ubuntu-pentest-tools.sh
+#http://www.darkoperator.com/installing-metasploit-in-ubunt/
+# Java From https://launchpad.net/~webupd8team/+archive/ubuntu/java
+
+
+
 package :build_essentials do
-  description 'Build Essesntial Package'
+  description 'Build Essential Package'
   apt %w(build-essential), :sudo => true do 
     pre :install, 'apt-get update'
+    pre :install, 'apt-get -y upgrade'
   end
 end
 
 package :ruby_dependencies do
   description 'Ruby Virtual Machine Build Dependencies'
-  apt %w( bison zlib1g-dev libssl-dev libreadline-dev libncurses5-dev file ), :sudo => true
+  apt %w(bison zlib1g-dev libssl-dev libreadline-dev libncurses5-dev file ), :sudo => true
 end
 
 package :ruby do
@@ -53,9 +63,35 @@ package :metasploit do
     post :install, 'BUNDLE_GEMFILE=/opt/metasploit-framework/Gemfile bundle install'
   end
   requires :metasploit_dependencies
-
 end
 
+#per http://developer.android.com/sdk/installing/index.html?pkg=tools
+package :android_sdk_prereqs do
+  description 'Android SDK prereqs for Ubuntu'
+  apt %w(libncurses5:i386 libstdc++6:i386 zlib1g:i386), :sudo => true do
+    pre :install, 'dpkg --add-architecture i386'    
+    pre :install, 'apt-get update'
+  end
+end
+
+#non-interactive hack from - http://askubuntu.com/questions/190582/installing-java-automatically-with-silent-option 
+package :java do 
+  description 'Oracle Java via the webupd8 repo'
+  apt %w(oracle-java7-installer), :sudo => true do
+    pre :install, 'add-apt-repository ppa:webupd8team/java'
+    pre :install, 'apt-get update'
+    pre :install, 'echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections'
+    pre :install, 'echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections'
+  end
+  verify do
+    has_file ' /usr/lib/jvm/java-7-oracle/jre/bin/java'
+  end
+end
+
+#package :android_sdk do
+#  description 'Android SDK'
+#  runner ['']
+#end
 
 policy :ruby, :roles => :test do
   requires :build_essentials
@@ -66,10 +102,12 @@ policy :ruby, :roles => :test do
   #requires :ruby_dependencies
   #requires :ruby, :version => "2.1.2"
   #requires :ruby_gems
-  requires :metasploit
+  #requires :metasploit
+  requires :java
 end
 
-
+#This is where you specify the machine to deploy to
+#Currently this is set-up for a vagrant box
 deployment do
   delivery :ssh do
     roles :test => '192.168.153.132'
