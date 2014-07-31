@@ -58,11 +58,76 @@ end
 package :ruby_gems do
   description 'common gems'
   #unlike apt which passes an array this should be a string
-  gem 'builder mechanize httparty nmap-parser rtf rubyXL wirble'
+
+  requires :mechanize
+  requires :httparty
+  requires :nmap_parser
+  requires :rtf
+  requires :rubyXL
+  requires :wirble
+  requires :builder
   requires :ruby
   requires :bundler
   requires :rails
   requires :brakeman
+end
+
+package :mechanize do
+  description 'mechanize gem'
+  gem 'mechanize'
+  verify do 
+    has_gem 'mechanize'
+  end
+end
+
+package :httparty do
+  description 'httparty gem'
+  gem 'httparty'
+  verify do
+    has_gem 'httparty'
+  end
+end
+
+package :nmap_parser do
+  description 'nmap-parser gem'
+  gem 'nmap-parser'
+  verify do
+    has_gem 'nmap-parser'
+  end
+end
+
+package 'rtf' do
+  description 'rtf gem'
+  gem 'rtf'
+  verify do 
+    has_gem 'rtf'
+  end
+end
+
+package 'rubyXL' do
+  description 'rubyXL gem'
+  gem 'rubyXL'
+  verify do
+    has_gem 'rubyXL'
+  end
+end
+
+package 'wirble' do
+  description 'wirble gem'
+  gem 'wirble'
+  verify do
+    has_gem 'wirble'
+  end
+end
+
+
+
+package :builder do
+  description 'builder gem'
+  gem 'builder'
+  verify do
+    has_gem 'builder'
+  end
 end
 
 package :bundler do
