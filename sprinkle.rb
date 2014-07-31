@@ -58,8 +58,35 @@ end
 package :ruby_gems do
   description 'common gems'
   #unlike apt which passes an array this should be a string
-  gem 'bundler brakeman rails builder mechanize httparty nmap-parser rtf rubyXL wirble'
+  gem 'builder mechanize httparty nmap-parser rtf rubyXL wirble'
   requires :ruby
+  requires :bundler
+  requires :rails
+  requires :brakeman
+end
+
+package :bundler do
+  description 'ruby bunder'
+  gem 'bundler'
+  verify do
+    has_executable 'bundle'
+  end
+end
+
+package :rails do
+  description 'ruby on rails'
+  gem 'rails'
+  verify do
+    has_executable 'rails'
+  end
+end
+
+package :brakeman do
+  description 'brakeman static analysis'
+  gem 'brakeman'
+  verify do
+    has_executable 'brakeman'
+  end
 end
 
 package :metasploit do
@@ -90,12 +117,22 @@ package :testing_scripts do
   end
 end
 
-#per http://developer.android.com/sdk/installing/index.html?pkg=tools
-package :android_sdk_prereqs do
-  description 'Android SDK prereqs for Ubuntu'
-  apt %w(libncurses5:i386 libstdc++6:i386 zlib1g:i386), :sudo => true do
-    pre :install, 'dpkg --add-architecture i386'    
-    pre :install, 'apt-get update'
+package :arachni_dependencies do
+  description 'Dependencies for Arachni'
+  apt %w(libcurl4-openssl-dev libyaml-dev), :sudo => true
+end
+
+package :arachni do
+  description 'arachni web app scanner'
+  runner ['git clone https://github.com/Arachni/arachni.git', 'mv arachni/ /opt/'] do
+    post :install, 'BUNDLE_GEMFILE=/opt/arachni/Gemfile bundle install'
+  end
+  requires :ruby
+  requires :ruby_gems
+  requires :general_dependencies
+  requires :arachni_dependencies
+  verify do
+    has_executable '/opt/arachni/bin/arachni'
   end
 end
 
@@ -113,6 +150,15 @@ package :java do
   end
 end
 
+#per http://developer.android.com/sdk/installing/index.html?pkg=tools
+package :android_sdk_prereqs do
+  description 'Android SDK prereqs for Ubuntu'
+  apt %w(libncurses5:i386 libstdc++6:i386 zlib1g:i386), :sudo => true do
+    pre :install, 'dpkg --add-architecture i386'    
+    pre :install, 'apt-get update'
+  end
+end
+
 #Kind of useless for now as you'll still need to get the platforms
 #tricky to automate due to dumb license accepting screens
 package :android_sdk do
@@ -123,7 +169,7 @@ package :android_sdk do
 end
 
 policy :ruby, :roles => :test do
-  requires :build_essentials
+  #requires :build_essentials
   #requires :ruby_dependencies
   #requires :ruby, :version => "2.1.2"
   #requires :metasploit_dependencies
@@ -132,8 +178,9 @@ policy :ruby, :roles => :test do
   #requires :ruby, :version => "2.1.2"
   #requires :ruby_gems
   #requires :metasploit
-  requires :java
-  requires :testing_scripts
+  #requires :java
+  #requires :testing_scripts
+  requires :arachni
 end
 
 #This is where you specify the machine to deploy to
