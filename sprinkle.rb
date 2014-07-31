@@ -201,6 +201,21 @@ package :arachni do
   end
 end
 
+package :nikto_dependencies do
+  description 'dependencies for nikto'
+  apt %w(libnet-ssleay-perl), :sudo => true
+end
+
+package :nikto do 
+  description 'nikto CGI scanner'
+  runner ['git clone https://github.com/sullo/nikto.git', 'mv nikto/ /opt/']
+  verify do
+    has_file '/opt/nikto/program/nikto.pl'
+  end
+  requires :nikto_dependencies
+end
+
+
 #non-interactive hack from - http://askubuntu.com/questions/190582/installing-java-automatically-with-silent-option 
 package :java do 
   description 'Oracle Java via the webupd8 repo'
@@ -233,19 +248,19 @@ package :android_sdk do
   requires :android_sdk_prereqs
 end
 
-policy :ruby, :roles => :test do
+policy :pentest, :roles => :test do
   #requires :build_essentials
   #requires :ruby_dependencies
   #requires :ruby, :version => "2.1.2"
   #requires :metasploit_dependencies
   #requires :nmap
   #requires :ruby_dependencies
-  #requires :ruby, :version => "2.1.2"
   #requires :ruby_gems
   #requires :metasploit
   #requires :java
   #requires :testing_scripts
   requires :arachni
+  requires :nikto
 end
 
 #This is where you specify the machine to deploy to
