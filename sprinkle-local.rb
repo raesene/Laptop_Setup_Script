@@ -157,7 +157,10 @@ end
 package :metasploit do
   description 'Metasploit Framework'
   runner ['git clone https://github.com/rapid7/metasploit-framework.git', 'mv metasploit-framework/ /opt/'] do
+    post :install, 'rvm install ruby-1.9.3-p547'
+    post :install, 'rvm use 1.9.3'
     post :install, 'BUNDLE_GEMFILE=/opt/metasploit-framework/Gemfile bundle install'
+    post :install, "chown -R $(whoami):$(whoami) /opt/metasploit-framework"
   end
   requires :ruby_gems
   requires :general_dependencies
