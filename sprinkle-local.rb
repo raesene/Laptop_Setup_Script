@@ -7,8 +7,13 @@
 
 #this is a cut of a script for setting up a local laptop instead of over a network
 #you need to get ruby working first so no packages for that
+#Easiest way is likely to use rvm (http://rvm.io)
 #To run this you need to use sudo or rvmsudo
 #e.g. rvmsudo sprinkle -v -s sprinkle-local.rb
+
+#At the moment I'm assuming this will be run with sudo (as opposed to running as root)
+#This variable is used later for chown commands
+$user = ENV['SUDO_USER']
 
 package :build_essentials do
   description 'Build Essential Package'
@@ -18,24 +23,19 @@ package :build_essentials do
   end
 end
 
-#package :ruby_dependencies do
-#  description 'Ruby Virtual Machine Build Dependencies'
-#  apt %w(bison zlib1g-dev libssl-dev libreadline-dev libncurses5-dev file ), :sudo => true
-#end
+package :wireshark do
+  description 'Wireshark Packet Sniffer'
+  apt %w(wireshark), :sudo => true
+  verify do
+    has_executable 'wireshark'
+  end
+end
 
-#package :ruby do
-#  description 'Ruby'
-#  version '2.1.2'
-#  source "http://cache.ruby-lang.org/pub/ruby/2.1/ruby-#{version}.tar.gz", :sudo => true 
-#  requires :ruby_dependencies
-#  verify do
-#    has_file '/usr/local/bin/ruby'
-#  end
-#end
+
 
 package :nmap do
   description 'nmap'
-  version '6.46'
+  version '6.47'
   source "http://nmap.org/dist/nmap-#{version}.tar.bz2", :sudo => true
   requires :build_essentials
   verify do
@@ -96,7 +96,7 @@ package :nmap_parser do
   end
 end
 
-package 'rtf' do
+package :rtf do
   description 'rtf gem'
   gem 'rtf'
   verify do 
@@ -104,7 +104,7 @@ package 'rtf' do
   end
 end
 
-package 'rubyXL' do
+package :rubyXL do
   description 'rubyXL gem'
   gem 'rubyXL'
   verify do
@@ -112,15 +112,13 @@ package 'rubyXL' do
   end
 end
 
-package 'wirble' do
+package :wirble do
   description 'wirble gem'
   gem 'wirble'
   verify do
     has_gem 'wirble'
   end
 end
-
-
 
 package :builder do
   description 'builder gem'
@@ -160,7 +158,7 @@ package :metasploit do
     post :install, 'rvm install ruby-1.9.3-p547'
     post :install, 'rvm use 1.9.3'
     post :install, 'BUNDLE_GEMFILE=/opt/metasploit-framework/Gemfile bundle install'
-    post :install, "chown -R $(whoami):$(whoami) /opt/metasploit-framework"
+    post :install, "chown -R #{$user}:#{$user} /opt/metasploit-framework"
   end
   requires :ruby_gems
   requires :general_dependencies
@@ -257,6 +255,7 @@ policy :pentest, :roles => :test do
   requires :testing_scripts
   requires :arachni
   requires :nikto
+  requires :wireshark
 end
 
 #This is where you specify the machine to deploy to
