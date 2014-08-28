@@ -173,6 +173,7 @@ package :testing_scripts do
   description 'Rorys testing scripts repo'
   runner ['git clone https://github.com/raesene/TestingScripts.git', 'mv TestingScripts/ /opt/'] do
     post :install, 'BUNDLE_GEMFILE=/opt/TestingScripts/Gemfile bundle install'
+    post :install, "chown -R #{$user}:#{$user} /opt/TestingScripts"
   end
   requires :ruby_gems
   requires :general_dependencies
@@ -190,6 +191,7 @@ package :arachni do
   description 'arachni web app scanner'
   runner ['git clone https://github.com/Arachni/arachni.git', 'mv arachni/ /opt/'] do
     post :install, 'BUNDLE_GEMFILE=/opt/arachni/Gemfile bundle install'
+    post :install, "chown -R #{$user}:#{$user} /opt/arachni"
   end
   requires :ruby_gems
   requires :general_dependencies
@@ -206,7 +208,9 @@ end
 
 package :nikto do 
   description 'nikto CGI scanner'
-  runner ['git clone https://github.com/sullo/nikto.git', 'mv nikto/ /opt/']
+  runner ['git clone https://github.com/sullo/nikto.git', 'mv nikto/ /opt/'] do
+    post :install, "chown -R #{$user}:#{$user} /opt/nikto"
+  end
   verify do
     has_file '/opt/nikto/program/nikto.pl'
   end
@@ -242,7 +246,9 @@ end
 package :android_sdk do
   description 'Android SDK'
   version = '23.0.2'
-  runner ["wget http://dl.google.com/android/android-sdk_r#{version}-linux.tgz", "tar -xzf android-sdk_r#{version}-linux.tgz", "mv android-sdk-line /opt/"]
+  runner ["wget http://dl.google.com/android/android-sdk_r#{version}-linux.tgz", "tar -xzf android-sdk_r#{version}-linux.tgz", "mv android-sdk-line /opt/"] do
+    post :install, "chown -R #{$user}:#{$user} /opt/android-sdk-line"
+  end
   requires :android_sdk_prereqs
 end
 
