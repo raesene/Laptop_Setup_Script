@@ -48,6 +48,13 @@ package :general_dependencies do
   apt %w(git-core subversion vim), :sudo => true
 end
 
+package :network_clients do
+  description 'network clients for various protocols (e.g. SMB, NFS)'
+  apt %w(smbclient nfs-common rsh-client), :sudo => true
+  verify do
+    has
+end
+
 package :metasploit_dependencies do
   description 'Metasploit Dependencies'
   apt %w(libreadline-dev libpq5 libpq-dev libreadline5 libsqlite3-dev libpcap-dev autoconf postgresql pgadmin3 curl zlib1g-dev libxml2-dev libxslt1-dev vncviewer libyaml-dev), :sudo => true
