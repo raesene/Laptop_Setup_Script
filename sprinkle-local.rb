@@ -51,6 +51,7 @@ package :general_dependencies do
     has_apt 'git-core'
     has_apt 'subversion'
     has_apt 'vim'
+  end
 end
 
 package :network_clients do
