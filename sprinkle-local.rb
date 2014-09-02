@@ -21,17 +21,18 @@ package :build_essentials do
     pre :install, 'apt-get update'
     pre :install, 'apt-get -y upgrade'
   end
+  verify do
+    has_apt 'build-essential'
+  end
 end
 
 package :wireshark do
   description 'Wireshark Packet Sniffer'
   apt %w(wireshark), :sudo => true
   verify do
-    has_executable 'wireshark'
+    has_apt 'wireshark'
   end
 end
-
-
 
 package :nmap do
   description 'nmap'
@@ -46,6 +47,10 @@ end
 package :general_dependencies do
   description 'useful packages for general use and installation'
   apt %w(git-core subversion vim), :sudo => true
+  verify do
+    has_apt 'git-core'
+    has_apt 'subversion'
+    has_apt 'vim'
 end
 
 package :network_clients do
@@ -61,11 +66,23 @@ end
 package :metasploit_dependencies do
   description 'Metasploit Dependencies'
   apt %w(libreadline-dev libpq5 libpq-dev libreadline5 libsqlite3-dev libpcap-dev autoconf postgresql pgadmin3 curl zlib1g-dev libxml2-dev libxslt1-dev vncviewer libyaml-dev), :sudo => true
+  verify do
+    has_apt 'libreadline-dev'
+    has_apt 'libpq5'
+    has_apt 'libpq-dev'
+    has_apt 'libreadline5'
+    has_apt 'libsqlite3-dev'
+    has_apt 'libpcap-dev'
+  end
 end
 
 package :rubygem_dependencies do
   description 'dependencies for ruby gems'
   apt %w(libxslt1-dev libxml2-dev), :sudo => true
+  verify do
+    has_apt 'libxslt1-dev'
+    has_apt 'libxml2-dev'
+  end
 end
 
 package :ruby_gems do
@@ -195,6 +212,10 @@ end
 package :arachni_dependencies do
   description 'Dependencies for Arachni'
   apt %w(libcurl4-openssl-dev libyaml-dev), :sudo => true
+  verify do
+    has_apt 'libcurl4-openssl-dev'
+    has_apt 'libyaml-dev'
+  end
 end
 
 package :arachni do
@@ -214,6 +235,9 @@ end
 package :nikto_dependencies do
   description 'dependencies for nikto'
   apt %w(libnet-ssleay-perl), :sudo => true
+  verify do
+    has_apt 'libnet-ssleay-perl'
+  end
 end
 
 package :nikto do 
@@ -272,6 +296,7 @@ policy :pentest, :roles => :test do
   requires :arachni
   requires :nikto
   requires :wireshark
+  requires :network_clients
 end
 
 #This is where you specify the machine to deploy to
