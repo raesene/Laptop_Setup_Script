@@ -307,6 +307,7 @@ policy :pentest, :roles => :test do
   requires :nikto
   requires :wireshark
   requires :network_clients
+  requires :input_rc
 end
 
 #This is where you specify the machine to deploy to
