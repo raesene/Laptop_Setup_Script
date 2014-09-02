@@ -289,7 +289,9 @@ end
 
 package :input_rc do
   description 'case insensitive tab completion'
-  file "/home/#{$user}/.inputrc", :content => File.read('personalisations/.inputrc')
+  file "/home/#{$user}/.inputrc", :content => File.read('personalisations/.inputrc') do
+    post :install, "chown #{$user}:#{$user} /home/#{$user}/.inputrc"
+  end
   verify do
     file_contains "/home/#{$user}/.inputrc", 'set completion-ignore-case on'
   end
