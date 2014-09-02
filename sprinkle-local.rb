@@ -52,7 +52,10 @@ package :network_clients do
   description 'network clients for various protocols (e.g. SMB, NFS)'
   apt %w(smbclient nfs-common rsh-client), :sudo => true
   verify do
-    has
+    has_apt 'smbclient'
+    has_apt 'nfs-common'
+    has_apt 'rsh-client'
+  end
 end
 
 package :metasploit_dependencies do
