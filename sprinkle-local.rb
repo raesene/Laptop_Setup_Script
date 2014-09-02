@@ -287,6 +287,15 @@ package :android_sdk do
   requires :android_sdk_prereqs
 end
 
+package :input_rc do
+  description 'case insensitive tab completion'
+  file "/home/#{$user}/.inputrc", :content => File.read('personalisations/.inputrc')
+  verify do
+    file_contains "/home/#{$user}/.inputrc", 'set completion-ignore-case on'
+  end
+end
+
+
 policy :pentest, :roles => :test do
   requires :metasploit_dependencies
   requires :nmap
