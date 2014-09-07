@@ -56,11 +56,21 @@ end
 
 package :network_clients do
   description 'network clients for various protocols (e.g. SMB, NFS)'
-  apt %w(smbclient nfs-common rsh-client), :sudo => true
+  apt %w(smbclient nfs-common rsh-client mysql-client-core-5.6), :sudo => true
   verify do
     has_apt 'smbclient'
     has_apt 'nfs-common'
     has_apt 'rsh-client'
+    has_apt 'mysql-client-core-5.6'
+  end
+end
+
+package :network_tools do
+  description 'Tools for network lookups (e.g. dns/whois)'
+  apt %w(whois snmp), :sudo => true
+  verify do
+    has_apt :whois
+    has_apt :snmp
   end
 end
 
@@ -250,6 +260,21 @@ package :nikto do
     has_file '/opt/nikto/program/nikto.pl'
   end
   requires :nikto_dependencies
+end
+
+package :testing_tools do
+  description 'testing tools in the ubuntu Apt repo'
+  apt %w(onesixtyone), :sudo => true
+  verify
+    has_apt :onesixtyone
+  end
+end
+
+package :fuzzdb do
+  runner ['svn checkout http://fuzzdb.googlecode.com/svn/trunk/ fuzzdb', 'mv fuzzdb/ /opt/']
+  verify do
+    has_directory '/opt/fuzzdb/'
+  end
 end
 
 
