@@ -265,7 +265,7 @@ end
 package :testing_tools do
   description 'testing tools in the ubuntu Apt repo'
   apt %w(onesixtyone), :sudo => true
-  verify
+  verify do
     has_apt :onesixtyone
   end
 end
