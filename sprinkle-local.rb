@@ -335,6 +335,9 @@ policy :pentest, :roles => :test do
   requires :wireshark
   requires :network_clients
   requires :input_rc
+  requires :fuzzdb
+  requires :testing_tools
+  requires :network_tools
 end
 
 #This is where you specify the machine to deploy to
