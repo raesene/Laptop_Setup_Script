@@ -8,13 +8,17 @@
 #this is a cut of a script for setting up a local laptop instead of over a network
 #you need to get ruby working first so no packages for that
 #Easiest way is likely to use rvm (http://rvm.io)
+#You will also need build-essential already installed for gem setup
 #To run this you need to use sudo or rvmsudo
 #e.g. rvmsudo sprinkle -v -s sprinkle-local.rb
 
 #At the moment I'm assuming this will be run with sudo (as opposed to running as root)
+
+
 #This variable is used later for chown commands
 $user = ENV['SUDO_USER']
 
+#This is probably already installed but just in case
 package :build_essentials do
   description 'Build Essential Package'
   apt %w(build-essential), :sudo => true do 
@@ -23,6 +27,14 @@ package :build_essentials do
   end
   verify do
     has_apt 'build-essential'
+  end
+end
+
+package :wget do
+  description 'wget needed for source installs'
+  apt %w(wget), :sudo => true
+  verify do
+    has_apt 'wget'
   end
 end
 
@@ -322,7 +334,7 @@ package :input_rc do
   end
 end
 
-
+#Remove requires lines for bits you don't need
 policy :pentest, :roles => :test do
   requires :metasploit_dependencies
   requires :nmap
