@@ -30,14 +30,6 @@ package :build_essentials do
   end
 end
 
-package :wget do
-  description 'wget needed for source installs'
-  apt %w(wget), :sudo => true
-  verify do
-    has_apt 'wget'
-  end
-end
-
 package :wireshark do
   description 'Wireshark Packet Sniffer'
   apt %w(wireshark), :sudo => true
@@ -51,6 +43,7 @@ package :nmap do
   version '6.47'
   source "http://nmap.org/dist/nmap-#{version}.tar.bz2", :sudo => true
   requires :build_essentials
+  requires :general_dependencies
   verify do
     has_file '/usr/local/bin/nmap'
   end
@@ -58,11 +51,12 @@ end
 
 package :general_dependencies do
   description 'useful packages for general use and installation'
-  apt %w(git-core subversion vim), :sudo => true
+  apt %w(git-core subversion vim wget), :sudo => true
   verify do
     has_apt 'git-core'
     has_apt 'subversion'
     has_apt 'vim'
+    has_apt 'wget'
   end
 end
 
