@@ -21,7 +21,7 @@ $user = ENV['SUDO_USER']
 #Absolute Essentials for Docker and other lightweight Envs
 package :basics do
 	description 'Basic install packages'
-	apt %w(python-software-properties sudo) do
+	apt %w(python-software-properties software-properties-common sudo) do
 		pre :install, 'apt-get update'
 		pre :install, 'apt-get -y upgrade'
 	end
