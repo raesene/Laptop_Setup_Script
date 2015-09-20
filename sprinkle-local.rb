@@ -101,8 +101,7 @@ package :metasploit_dependencies do
 end
 
 package :rubygem_dependencies do
-  description 'dependencies for ruby gems'
-  apt %w(libxslt1-dev libxml2-dev), :sudo => true
+  description 'dependencies for ruby gems  apt %w(libxslt1-dev libxml2-dev), :sudo => true
   verify do
     has_apt 'libxslt1-dev'
     has_apt 'libxml2-dev'
@@ -205,7 +204,7 @@ end
 
 package :metasploit do
   description 'Metasploit Framework'
-  runner ['git clone https://github.com/rapid7/metasploit-framework.git', 'mv metasploit-framework/ /opt/'] do
+  runner ['git clone --depth=1 https://github.com/rapid7/metasploit-framework.git', 'mv metasploit-framework/ /opt/'] do
     post :install, 'rvm install ruby-1.9.3-p547'
     post :install, 'rvm use 1.9.3'
     post :install, 'BUNDLE_GEMFILE=/opt/metasploit-framework/Gemfile bundle install'
@@ -222,7 +221,7 @@ end
 
 package :testing_scripts do
   description 'Rorys testing scripts repo'
-  runner ['git clone https://github.com/raesene/TestingScripts.git', 'mv TestingScripts/ /opt/'] do
+  runner ['git clone --depth=1 https://github.com/raesene/TestingScripts.git', 'mv TestingScripts/ /opt/'] do
     post :install, 'BUNDLE_GEMFILE=/opt/TestingScripts/Gemfile bundle install'
     post :install, "chown -R #{$user}:#{$user} /opt/TestingScripts"
   end
@@ -244,7 +243,7 @@ end
 
 package :arachni do
   description 'arachni web app scanner'
-  runner ['git clone https://github.com/Arachni/arachni.git', 'mv arachni/ /opt/'] do
+  runner ['git clone --depth=1 https://github.com/Arachni/arachni.git', 'mv arachni/ /opt/'] do
     post :install, 'BUNDLE_GEMFILE=/opt/arachni/Gemfile bundle install'
     post :install, "chown -R #{$user}:#{$user} /opt/arachni"
   end
@@ -266,7 +265,7 @@ end
 
 package :nikto do 
   description 'nikto CGI scanner'
-  runner ['git clone https://github.com/sullo/nikto.git', 'mv nikto/ /opt/'] do
+  runner ['git clone --depth=1 https://github.com/sullo/nikto.git', 'mv nikto/ /opt/'] do
     post :install, "chown -R #{$user}:#{$user} /opt/nikto"
   end
   verify do
@@ -284,7 +283,7 @@ package :testing_tools do
 end
 
 package :seclists do
-  runner ['git clone https://github.com/danielmiessler/SecLists.git']
+  runner ['git clone --depth=1 https://github.com/danielmiessler/SecLists.git', 'mv SecLists/ /opt/']
   verify do
     has_directory '/opt/SecLists/'
   end
