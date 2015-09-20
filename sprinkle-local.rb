@@ -18,13 +18,20 @@
 #This variable is used later for chown commands
 $user = ENV['SUDO_USER']
 
+#Absolute Essentials for Docker and other lightweight Envs
+package :basics do
+	description 'Basic install packages'
+	apt %w(python-software-properties sudo) do
+		pre :install, 'apt-get update'
+		pre :install, 'apt-get -y upgrade'
+	end
+end
+
 #This is probably already installed but just in case
 package :build_essentials do
   description 'Build Essential Package'
-  apt %w(build-essential), :sudo => true do 
-    pre :install, 'apt-get update'
-    pre :install, 'apt-get -y upgrade'
-  end
+  apt %w(build-essential), :sudo => true
+  requires :basics
   verify do
     has_apt 'build-essential'
   end
@@ -330,6 +337,7 @@ end
 
 #Remove requires lines for bits you don't need
 policy :pentest, :roles => :test do
+  requires :basics
   requires :metasploit_dependencies
   requires :nmap
   requires :ruby_gems
