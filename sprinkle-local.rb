@@ -283,10 +283,10 @@ package :testing_tools do
   end
 end
 
-package :fuzzdb do
-  runner ['svn checkout http://fuzzdb.googlecode.com/svn/trunk/ fuzzdb', 'mv fuzzdb/ /opt/']
+package :seclists do
+  runner ['git clone https://github.com/danielmiessler/SecLists.git']
   verify do
-    has_directory '/opt/fuzzdb/'
+    has_directory '/opt/SecLists/'
   end
 end
 
@@ -349,7 +349,7 @@ policy :pentest, :roles => :test do
   requires :wireshark
   requires :network_clients
   requires :input_rc
-  requires :fuzzdb
+  requires :seclists
   requires :testing_tools
   requires :network_tools
 end
