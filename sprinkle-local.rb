@@ -293,7 +293,7 @@ end
 package :docker do
   runner ['wget -qO- https://get.docker.com/ | sh'], :sudo => true
   verify do
-    has_command 'docker'
+    has_executable 'docker'
   end
 end
 
@@ -310,6 +310,15 @@ package :java do
     has_file ' /usr/lib/jvm/java-7-oracle/jre/bin/java'
   end
 end
+
+package :zap do
+  description 'OWASP ZAP Proxy'
+  runner ['wget https://github.com/zaproxy/zaproxy/releases/download/2.4.2/ZAP_2.4.2_Linux.tar.gz', 'tar -xzvf ZAP_2.4.2_Linux.tar.gz', 'mv ZAP_2.4.2 /opt/ZAP']
+  verify do
+    has_file '/opt/ZAP/zap.sh'
+  end
+end
+
 
 #per http://developer.android.com/sdk/installing/index.html?pkg=tools
 package :android_sdk_prereqs do
