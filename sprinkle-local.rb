@@ -317,6 +317,7 @@ package :zap do
   verify do
     has_file '/opt/ZAP/zap.sh'
   end
+  requires :java
 end
 
 
@@ -368,6 +369,7 @@ policy :pentest, :roles => :test do
   requires :testing_tools
   requires :network_tools
   requires :docker
+  requires :zap
 end
 
 #This is where you specify the machine to deploy to
