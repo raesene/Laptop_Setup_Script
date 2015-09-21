@@ -313,7 +313,7 @@ end
 
 package :zap do
   description 'OWASP ZAP Proxy'
-  runner ['wget https://github.com/zaproxy/zaproxy/releases/download/2.4.2/ZAP_2.4.2_Linux.tar.gz', 'tar -xzvf ZAP_2.4.2_Linux.tar.gz', 'mv ZAP_2.4.2 /opt/ZAP']
+  runner ['wget -q https://github.com/zaproxy/zaproxy/releases/download/2.4.2/ZAP_2.4.2_Linux.tar.gz', 'tar -xzvf ZAP_2.4.2_Linux.tar.gz', 'mv ZAP_2.4.2 /opt/ZAP']
   verify do
     has_file '/opt/ZAP/zap.sh'
   end
