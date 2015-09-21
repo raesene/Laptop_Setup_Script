@@ -101,7 +101,8 @@ package :metasploit_dependencies do
 end
 
 package :rubygem_dependencies do
-  description 'dependencies for ruby gems  apt %w(libxslt1-dev libxml2-dev), :sudo => true
+  description 'dependencies for ruby gems'  
+  apt %w(libxslt1-dev libxml2-dev), :sudo => true
   verify do
     has_apt 'libxslt1-dev'
     has_apt 'libxml2-dev'
@@ -289,6 +290,12 @@ package :seclists do
   end
 end
 
+package :docker do
+  runner ['wget -qO- https://get.docker.com/ | sh'], :sudo => true
+  verify do
+    has_command 'docker'
+  end
+end
 
 #non-interactive hack from - http://askubuntu.com/questions/190582/installing-java-automatically-with-silent-option 
 package :java do 
@@ -351,6 +358,7 @@ policy :pentest, :roles => :test do
   requires :seclists
   requires :testing_tools
   requires :network_tools
+  requires :docker
 end
 
 #This is where you specify the machine to deploy to
