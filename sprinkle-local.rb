@@ -323,10 +323,16 @@ end
 
 package :beef do
   description 'Beef XSS Framework'
-  runner ['wget -q https://github.com/beefproject/beef/archive/beef-0.4.6.1.zip', 'unzip beef-0.4.6.1.zip', 'mv beef-beef-0.4.6.1/ opt/beef/']
+  runner ['wget -q https://github.com/beefproject/beef/archive/beef-0.4.6.1.zip', 'unzip beef-0.4.6.1.zip', 'mv beef-beef-0.4.6.1/ opt/beef/'] do
+    post :install, 'rvm install ruby-1.9.3-p547'
+    post :install, 'rvm use 1.9.3'
+    post :install, 'BUNDLE_GEMFILE=/opt/beef/Gemfile bundle install'
+  end
   verify do
     has_file '/opt/beef/beef'
   end
+  requires :ruby_gems
+  requires :general_dependencies
 end
 
 
