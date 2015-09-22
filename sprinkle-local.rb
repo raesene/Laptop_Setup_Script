@@ -64,6 +64,7 @@ package :general_dependencies do
     has_apt 'subversion'
     has_apt 'vim'
     has_apt 'wget'
+    has_apt 'unzip'
   end
 end
 
@@ -320,6 +321,15 @@ package :zap do
   requires :java
 end
 
+package :beef do
+  description 'Beef XSS Framework'
+  runner ['wget -q https://github.com/beefproject/beef/archive/beef-0.4.6.1.zip', 'unzip beef-0.4.6.1.zip', 'mv beef-beef-0.4.6.1/ opt/beef/']
+  verify do
+    has_file '/opt/beef/beef'
+  end
+end
+
+
 
 #per http://developer.android.com/sdk/installing/index.html?pkg=tools
 package :android_sdk_prereqs do
@@ -370,6 +380,7 @@ policy :pentest, :roles => :test do
   requires :network_tools
   requires :docker
   requires :zap
+  requires :beef
 end
 
 #This is where you specify the machine to deploy to
