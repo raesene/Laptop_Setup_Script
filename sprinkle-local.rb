@@ -344,6 +344,14 @@ package :apache_directory_studio do
   requires :java
 end
 
+package :hoppy do
+  description 'HTTP Options Scanner'
+  runner ['wget -q https://labs.portcullis.co.uk/download/hoppy-1.8.1.tar.bz2','tar -xjf hoppy-1.8.1.tar.bz2','mv hoppy-1.8.1 /opt/hoppy/']
+  verify do
+    has_file '/opt/hoppy/hoppy'
+  end
+end
+
 #per http://developer.android.com/sdk/installing/index.html?pkg=tools
 package :android_sdk_prereqs do
   description 'Android SDK prereqs for Ubuntu'
@@ -374,6 +382,16 @@ package :input_rc do
   end
 end
 
+package :gem_rc do
+  description 'turn off ri and rdoc'
+  file "/home/#{$user}/.gemrc", :content => File.read('personalisations/.gemrc') do
+    post :install, "chown #{$user}:#{$user} /home/#{$user}/.gemrc"
+  end
+  verify do
+    file_contains "/home/#{$user}/.gemrc", '--no-rdoc --no-ri'
+  end
+end
+
 #Remove requires lines for bits you don't need
 policy :pentest, :roles => :test do
   requires :basics
@@ -388,6 +406,7 @@ policy :pentest, :roles => :test do
   requires :wireshark
   requires :network_clients
   requires :input_rc
+  requires :gem_rc
   requires :seclists
   requires :testing_tools
   requires :network_tools
@@ -395,6 +414,7 @@ policy :pentest, :roles => :test do
   requires :zap
   requires :beef
   requires :apache_directory_studio
+  requires :hoppy
 end
 
 #This is where you specify the machine to deploy to
