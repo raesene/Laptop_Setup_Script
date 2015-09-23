@@ -388,7 +388,7 @@ package :gem_rc do
     post :install, "chown #{$user}:#{$user} /home/#{$user}/.gemrc"
   end
   verify do
-    file_contains "/home/#{$user}/.gemrc", '--no-rdoc --no-ri'
+    has_file "/home/#{$user}/.gemrc"
   end
 end
 
