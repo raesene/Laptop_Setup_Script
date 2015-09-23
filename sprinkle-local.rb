@@ -323,7 +323,7 @@ end
 
 package :beef do
   description 'Beef XSS Framework'
-  runner ['wget -q https://github.com/beefproject/beef/archive/beef-0.4.6.1.zip', 'unzip beef-0.4.6.1.zip', 'mv beef-beef-0.4.6.1/ opt/beef/'] do
+  runner ['wget -q https://github.com/beefproject/beef/archive/beef-0.4.6.1.zip', 'unzip -qq beef-0.4.6.1.zip', 'mv beef-beef-0.4.6.1/ /opt/beef/'] do
     post :install, 'rvm install ruby-1.9.3-p547'
     post :install, 'rvm use 1.9.3'
     post :install, 'BUNDLE_GEMFILE=/opt/beef/Gemfile bundle install'
@@ -335,7 +335,14 @@ package :beef do
   requires :general_dependencies
 end
 
-
+package :apache_directory_studio do
+  description 'GUI LDAP Query App'
+  runner ['wget -q http://mirror.vorboss.net/apache/directory/studio/2.0.0.v20150606-M9/ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'tar -xzf ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'mv ApacheDirectoryStudio /opt/']
+  verify do
+    has_file '/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
+  end
+  requires :java
+end
 
 #per http://developer.android.com/sdk/installing/index.html?pkg=tools
 package :android_sdk_prereqs do
@@ -387,6 +394,7 @@ policy :pentest, :roles => :test do
   requires :docker
   requires :zap
   requires :beef
+  requires :apache_directory_studio
 end
 
 #This is where you specify the machine to deploy to
