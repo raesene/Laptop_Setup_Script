@@ -370,7 +370,7 @@ end
 
 package :Reconng do
   description 'Recon-NG Scanner'
-  runner ['git clone git clone https://bitbucket.org/LaNMaSteR53/recon-ng.git','mv recon-ng /opt/']
+  runner ['git clone https://bitbucket.org/LaNMaSteR53/recon-ng.git','mv recon-ng /opt/']
   verify do
     has_file '/opt/recon-ng/recon-ng'
   end
