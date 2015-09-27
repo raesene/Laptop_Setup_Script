@@ -17,7 +17,6 @@
 #IIS shortname scanner
 #Recon-ng
 #SoapUI
-#TestSSLServer
 
 
 
@@ -362,6 +361,16 @@ package :TestSSLServer do
   requires :java
 end
 
+package :IISShortNameScanner do
+  description 'Scanning tool for identifying files on IIS servers by 8.3 name'
+  runner ['git clone https://github.com/irsdl/IIS-ShortName-Scanner.git','mv IIS-ShortName-Scanner /opt/']
+  verify do
+    has_file '/opt/IIS-ShortName-Scanner/IIS_shortname_scanner.jar'
+  end
+  requires :java
+end
+
+
 package :sslyze do
   description 'SSL Scanner'
   runner ['wget -q https://github.com/nabla-c0d3/sslyze/releases/download/release-0.12/sslyze-0_12-linux64.zip', 'unzip sslyze-0_12-linux64.zip', 'mv sslyze /opt/']
@@ -468,6 +477,7 @@ policy :pentest, :roles => :test do
   requires :wpscan
   requires :TestSSLServer
   requires :sslyze
+  requires :IISShortNameScanner
 end
 
 #This is where you specify the machine to deploy to
