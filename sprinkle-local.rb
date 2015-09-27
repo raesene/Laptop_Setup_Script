@@ -5,7 +5,7 @@
 #http://www.darkoperator.com/installing-metasploit-in-ubunt/
 # Java From https://launchpad.net/~webupd8team/+archive/ubuntu/java
 
-#this is a cut of a script for setting up a local laptop instead of over a network
+#this is a cut of a script for setting up a local laptop with Security Testing Tools
 #you need to get ruby working first so no packages for that
 #Easiest way is likely to use rvm (http://rvm.io)
 #You will also need build-essential already installed for gem setup
@@ -13,8 +13,9 @@
 #e.g. rvmsudo sprinkle -v -s sprinkle-local.rb
 
 #At the moment I'm assuming this will be run with sudo (as opposed to running as root)
+#ToDo: Split up the tools into different roles, so we can only install some not all of 'em.
 #ToAdd
-#SoapUI
+
 
 
 
