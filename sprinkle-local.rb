@@ -368,7 +368,7 @@ package :IISShortNameScanner do
   requires :java
 end
 
-package :Recon-NG do
+package :Reconng do
   description 'Recon-NG Scanner'
   runner ['git clone git clone https://bitbucket.org/LaNMaSteR53/recon-ng.git','mv recon-ng /opt/']
   verify do
@@ -483,7 +483,7 @@ policy :pentest, :roles => :test do
   requires :TestSSLServer
   requires :sslyze
   requires :IISShortNameScanner
-  requires :Recon-NG
+  requires :Reconng
 end
 
 #This is where you specify the machine to deploy to
