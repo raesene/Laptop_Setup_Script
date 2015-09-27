@@ -368,6 +368,25 @@ package :IISShortNameScanner do
   requires :java
 end
 
+package :SoapUI do
+  description 'Web Services Testing Tool'
+  runner ['wget -q http://cdn01.downloads.smartbear.com/soapui/5.2.0/SoapUI-5.2.0-linux-bin.tar.gz','tar -xzf SoapUI-5.2.0-linux-bin.tar.gz','mv SoapUI-5.2.0 /opt/SoapUI']
+  verify do
+    has_file '/opt/SoapUI/bin/soapui.sh'
+  end
+  requires :java
+end
+
+package :apache_directory_studio do
+  description 'GUI LDAP Query App'
+  runner ['wget -q http://mirror.vorboss.net/apache/directory/studio/2.0.0.v20150606-M9/ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'tar -xzf ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'mv ApacheDirectoryStudio /opt/']
+  verify do
+    has_file '/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
+  end
+  requires :java
+end
+
+
 package :Reconng do
   description 'Recon-NG Scanner'
   runner ['git clone https://bitbucket.org/LaNMaSteR53/recon-ng.git','mv recon-ng /opt/']
@@ -397,15 +416,6 @@ package :beef do
   end
   requires :ruby_gems
   requires :general_dependencies
-end
-
-package :apache_directory_studio do
-  description 'GUI LDAP Query App'
-  runner ['wget -q http://mirror.vorboss.net/apache/directory/studio/2.0.0.v20150606-M9/ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'tar -xzf ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'mv ApacheDirectoryStudio /opt/']
-  verify do
-    has_file '/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
-  end
-  requires :java
 end
 
 package :hoppy do
@@ -484,6 +494,7 @@ policy :pentest, :roles => :test do
   requires :sslyze
   requires :IISShortNameScanner
   requires :Reconng
+  requires :SoapUI
 end
 
 #This is where you specify the machine to deploy to
