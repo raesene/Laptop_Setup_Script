@@ -17,7 +17,6 @@
 #IIS shortname scanner
 #Recon-ng
 #SoapUI
-#Wpscan
 #TestSSLServer
 
 
@@ -354,6 +353,16 @@ package :zap do
   requires :java
 end
 
+package :TestSSLServer do
+  description 'SSL Checker that doesn\'t use openssl'
+  runner ['mkdir /opt/TestSSLServer', 'wget -q http://www.bolet.org/TestSSLServer/TestSSLServer.jar', 'mv TestSSLServer.jar /opt/TestSSLServer/']
+  verify do 
+    has_file '/opt/TestSSLServer/TestSSLServer.jar'
+  end
+  requires :java
+end
+
+
 package :beef do
   description 'Beef XSS Framework'
   runner ['wget -q https://github.com/beefproject/beef/archive/beef-0.4.6.1.zip', 'unzip -qq beef-0.4.6.1.zip', 'mv beef-beef-0.4.6.1/ /opt/beef/'] do
@@ -449,6 +458,7 @@ policy :pentest, :roles => :test do
   requires :apache_directory_studio
   requires :hoppy
   requires :wpscan
+  requires :TestSSLServer
 end
 
 #This is where you specify the machine to deploy to
