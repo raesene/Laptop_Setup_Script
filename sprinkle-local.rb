@@ -362,6 +362,14 @@ package :TestSSLServer do
   requires :java
 end
 
+package :sslyze do
+  description 'SSL Scanner'
+  runner ['git clone --depth=1 https://github.com/nabla-c0d3/sslyze.git', 'mv sslyze /opt/']
+  verify do
+    has_file '/opt/sslyze/sslyze.py'
+  end
+end
+
 
 package :beef do
   description 'Beef XSS Framework'
@@ -459,6 +467,7 @@ policy :pentest, :roles => :test do
   requires :hoppy
   requires :wpscan
   requires :TestSSLServer
+  requires :sslyze
 end
 
 #This is where you specify the machine to deploy to
