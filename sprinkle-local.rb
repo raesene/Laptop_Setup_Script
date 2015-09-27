@@ -364,7 +364,7 @@ end
 
 package :sslyze do
   description 'SSL Scanner'
-  runner ['git clone --depth=1 https://github.com/nabla-c0d3/sslyze.git', 'mv sslyze /opt/']
+  runner ['wget -q https://github.com/nabla-c0d3/sslyze/releases/download/release-0.12/sslyze-0_12-linux64.zip', 'unzip sslyze-0_12-linux64.zip', 'mv sslyze /opt/']
   verify do
     has_file '/opt/sslyze/sslyze.py'
   end
