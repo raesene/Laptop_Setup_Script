@@ -14,8 +14,6 @@
 
 #At the moment I'm assuming this will be run with sudo (as opposed to running as root)
 #ToAdd
-#IIS shortname scanner
-#Recon-ng
 #SoapUI
 
 
@@ -370,6 +368,13 @@ package :IISShortNameScanner do
   requires :java
 end
 
+package :Recon-NG do
+  description 'Recon-NG Scanner'
+  runner ['git clone git clone https://bitbucket.org/LaNMaSteR53/recon-ng.git','mv recon-ng /opt/']
+  verify do
+    has_file '/opt/recon-ng/recon-ng'
+  end
+end
 
 package :sslyze do
   description 'SSL Scanner'
@@ -478,6 +483,7 @@ policy :pentest, :roles => :test do
   requires :TestSSLServer
   requires :sslyze
   requires :IISShortNameScanner
+  requires :Recon-NG
 end
 
 #This is where you specify the machine to deploy to
