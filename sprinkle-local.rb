@@ -13,6 +13,13 @@
 #e.g. rvmsudo sprinkle -v -s sprinkle-local.rb
 
 #At the moment I'm assuming this will be run with sudo (as opposed to running as root)
+#ToAdd
+#IIS shortname scanner
+#Recon-ng
+#SoapUI
+#Wpscan
+#TestSSLServer
+
 
 
 #This variable is used later for chown commands
@@ -58,13 +65,14 @@ end
 
 package :general_dependencies do
   description 'useful packages for general use and installation'
-  apt %w(git-core subversion vim wget), :sudo => true
+  apt %w(git-core subversion vim wget curl), :sudo => true
   verify do
     has_apt 'git-core'
     has_apt 'subversion'
     has_apt 'vim'
     has_apt 'wget'
     has_apt 'unzip'
+    has_apt 'curl'
   end
 end
 
@@ -231,6 +239,31 @@ package :testing_scripts do
   requires :general_dependencies
   verify do
     has_file '/opt/TestingScripts/nmapautoanalyzer.rb'
+  end
+end
+
+package :wpscan_dependencies do
+  description 'Dependencies for wpscan'
+  apt %w(libcurl4-openssl-dev libxml2 libxml2-dev libxslt1-dev), :sudo => true
+  verify do
+    has_apt 'libcurl4-openssl-dev'
+    has_apt 'libxml2'
+    has_apt 'libxml2-dev'
+    has_apt 'libxslt1-dev'
+  end
+end
+
+package :wpscan do
+  description 'WPScan Wordpress Security Scanner'
+  runner ['git clone --depth=1 https://github.com/wpscanteam/wpscan.git', 'mv wpscan/ /opt/'] do
+    post :install, 'BUNDLE_GEMFILE=/opt/wpscan/Gemfile bundle install --without test'
+    post :install, "chown -R #{$user}:#{$user} /opt/wpscan" 
+  end
+  requires :ruby_gems
+  requires :wpscan_dependencies
+  requires :general_dependencies
+  verify do
+    has_executable '/opt/wpscan/wpscan.rb'
   end
 end
 
@@ -415,6 +448,7 @@ policy :pentest, :roles => :test do
   requires :beef
   requires :apache_directory_studio
   requires :hoppy
+  requires :wpscan
 end
 
 #This is where you specify the machine to deploy to
