@@ -406,7 +406,7 @@ end
 
 package :sqlmap do
   description 'SQLmap'
-  runner ['it clone https://github.com/sqlmapproject/sqlmap.git sqlmap', 'mv sqlmap /opt/']
+  runner ['git clone https://github.com/sqlmapproject/sqlmap.git sqlmap', 'mv sqlmap /opt/']
   verify do
   	has_file '/opt/sqlmap/sqlmap.py'
   end
