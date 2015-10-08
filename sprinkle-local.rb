@@ -404,6 +404,15 @@ package :sslyze do
   end
 end
 
+package :sqlmap do
+  description 'SQLmap'
+  runner ['it clone https://github.com/sqlmapproject/sqlmap.git sqlmap', 'mv sqlmap /opt/']
+  verify do
+  	has_file '/opt/sqlmap/sqlmap.py'
+  end
+end
+
+
 
 package :beef do
   description 'Beef XSS Framework'
@@ -496,6 +505,7 @@ policy :pentest, :roles => :test do
   requires :IISShortNameScanner
   requires :Reconng
   requires :SoapUI
+  requires :sqlmap
 end
 
 #This is where you specify the machine to deploy to
