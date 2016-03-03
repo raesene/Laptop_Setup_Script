@@ -51,7 +51,7 @@ end
 
 package :nmap do
   description 'nmap'
-  version '6.47'
+  version '7.01'
   source "http://nmap.org/dist/nmap-#{version}.tar.bz2", :sudo => true
   requires :build_essentials
   requires :general_dependencies
@@ -212,8 +212,8 @@ end
 package :metasploit do
   description 'Metasploit Framework'
   runner ['git clone --depth=1 https://github.com/rapid7/metasploit-framework.git', 'mv metasploit-framework/ /opt/'] do
-    post :install, 'rvm install ruby-1.9.3-p547'
-    post :install, 'rvm use 1.9.3'
+    post :install, 'rvm install ruby-2.1.8'
+    post :install, 'rvm use 2.1.8'
     post :install, 'BUNDLE_GEMFILE=/opt/metasploit-framework/Gemfile bundle install'
     post :install, "chown -R #{$user}:#{$user} /opt/metasploit-framework"
   end
@@ -331,20 +331,20 @@ end
 #non-interactive hack from - http://askubuntu.com/questions/190582/installing-java-automatically-with-silent-option 
 package :java do 
   description 'Oracle Java via the webupd8 repo'
-  apt %w(oracle-java7-installer), :sudo => true do
+  apt %w(oracle-java8-installer), :sudo => true do
     pre :install, 'add-apt-repository ppa:webupd8team/java'
     pre :install, 'apt-get update'
     pre :install, 'echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections'
     pre :install, 'echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections'
   end
   verify do
-    has_file ' /usr/lib/jvm/java-7-oracle/jre/bin/java'
+    has_file ' /usr/lib/jvm/java-8-oracle/jre/bin/java'
   end
 end
 
 package :zap do
   description 'OWASP ZAP Proxy'
-  runner ['wget -q https://github.com/zaproxy/zaproxy/releases/download/2.4.2/ZAP_2.4.2_Linux.tar.gz', 'tar -xzvf ZAP_2.4.2_Linux.tar.gz', 'mv ZAP_2.4.2 /opt/ZAP']
+  runner ['wget -q https://github.com/zaproxy/zaproxy/releases/download/2.4.3/ZAP_2.4.3_Linux.tar.gz', 'tar -xzvf ZAP_2.4.3_Linux.tar.gz', 'mv ZAP_2.4.3 /opt/ZAP']
   verify do
     has_file '/opt/ZAP/zap.sh'
   end
@@ -364,14 +364,14 @@ package :IISShortNameScanner do
   description 'Scanning tool for identifying files on IIS servers by 8.3 name'
   runner ['git clone https://github.com/irsdl/IIS-ShortName-Scanner.git','mv IIS-ShortName-Scanner /opt/']
   verify do
-    has_file '/opt/IIS-ShortName-Scanner/IIS_shortname_scanner.jar'
+    has_file '/opt/IIS-ShortName-Scanner/iis_shortname_scanner.jar'
   end
   requires :java
 end
 
 package :SoapUI do
   description 'Web Services Testing Tool'
-  runner ['wget -q http://cdn01.downloads.smartbear.com/soapui/5.2.0/SoapUI-5.2.0-linux-bin.tar.gz','tar -xzf SoapUI-5.2.0-linux-bin.tar.gz','mv SoapUI-5.2.0 /opt/SoapUI']
+  runner ['wget -q http://cdn01.downloads.smartbear.com/soapui/5.2.1/SoapUI-5.2.1-linux-bin.tar.gz','tar -xzf SoapUI-5.2.1-linux-bin.tar.gz','mv SoapUI-5.2.1 /opt/SoapUI']
   verify do
     has_file '/opt/SoapUI/bin/soapui.sh'
   end
@@ -380,7 +380,7 @@ end
 
 package :apache_directory_studio do
   description 'GUI LDAP Query App'
-  runner ['wget -q http://mirror.vorboss.net/apache/directory/studio/2.0.0.v20150606-M9/ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'tar -xzf ApacheDirectoryStudio-2.0.0.v20150606-M9-linux.gtk.x86_64.tar.gz', 'mv ApacheDirectoryStudio /opt/']
+  runner ['wget -q http://mirror.vorboss.net/apache/directory/studio/2.0.0.v20151221-M10/ApacheDirectoryStudio-2.0.0.v20151221-M10-linux.gtk.x86_64.tar.gz', 'tar -xzf ApacheDirectoryStudio-2.0.0.v20151221-M10-linux.gtk.x86_64.tar.gz', 'mv ApacheDirectoryStudio /opt/']
   verify do
     has_file '/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
   end
@@ -411,8 +411,6 @@ package :sqlmap do
   	has_file '/opt/sqlmap/sqlmap.py'
   end
 end
-
-
 
 package :beef do
   description 'Beef XSS Framework'
@@ -476,6 +474,13 @@ package :gem_rc do
   end
 end
 
+#Bit lame as there's no verifyer for runner actions so this will keep appending...
+package :bash_rc do
+  description 'add bashrc customizations'
+  runner "cat personalisations/.bashrc >> /home/#{$user}/.bashrc"
+end
+
+
 #Remove requires lines for bits you don't need
 policy :pentest, :roles => :test do
   requires :basics
@@ -491,6 +496,7 @@ policy :pentest, :roles => :test do
   requires :network_clients
   requires :input_rc
   requires :gem_rc
+  requires :bash_rc
   requires :seclists
   requires :testing_tools
   requires :network_tools
